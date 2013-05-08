@@ -6,13 +6,18 @@
 % hypothesis space : step functions 0->1, 0->-1, -1->0, 1->0;
 
 %function [alpha] = gradient_boosting(data,num_iter)
-data = [     1     0
+data=[
+     1     0
      2     0
-     4     0
-     5     1
-     7     1
-     9     1];
-num_iter = 1;
+     3     0
+     4     1
+     6     1
+     7     2
+     9     2
+    10     2
+];
+
+num_iter=5;
 
 
 
@@ -25,12 +30,11 @@ alpha = zeros(d_length,num_iter+1);
 h = zeros(d_length,num_iter+1);
 r = zeros(d_range,num_iter+1);
 
-F = 0;
 for i=2:num_iter+1
-  fprintf('%d th iteration\n',i-1)
-  alpha
-  h
-  step_function(data(:,1),h(:,i-1),d_range)
+  %fprintf('%d th iteration\n',i-1)
+  %alpha
+  %h
+  %step_function(data(:,1),h(:,i-1),d_range)
 
   F = zeros(d_range,1);
   for k = 1:d_length
@@ -42,7 +46,7 @@ for i=2:num_iter+1
   end
 
   for k=1:d_length
-    r(data(k,1),i) = data(k,2) - F(data(k,1))
+    r(data(k,1),i) = data(k,2) - F(data(k,1));
   end
 
   if norm(r(:,i))==0
@@ -79,7 +83,7 @@ for i=2:num_iter+1
   step_func = step_function(data(t_max,1),t_max_type,d_range);
   norm_step = step_function(data(t_max,1),t_max_type,d_range)/...
               norm(step_func(data(:,1))); 
-  epsilon = r(data(:,1),i)'*norm_step(data(:,1))
+  epsilon = r(data(:,1),i)'*norm_step(data(:,1));
 
   %update alpha
   alpha(:,i) = alpha(:,i-1);
@@ -98,11 +102,22 @@ for k = 1:d_length
     norm(step_func(data(:,1)))*alpha(k,end);
   end
 end
-F_end
-r_end = zeros(d_range,1)
+F_end;
+r_end = zeros(d_range,1);
 for k=1:d_length
-  r_end(data(k,1)) = data(k,2) - F_end(data(k,1))
+  r_end(data(k,1)) = data(k,2) - F_end(data(k,1));
 end
 
 
+fprintf('result')
+r
+h
+alpha
+
+
+figure
+hold on
+grid on
+scatter(data(:,1),data(:,2),1000*ones(d_length,1),'.')
+plot(d_min:d_max, F_end, 'r', 'Linewidth',2)
 
