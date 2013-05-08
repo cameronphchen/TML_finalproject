@@ -1,0 +1,12 @@
+A Sparse Boosting Algorithm for Regression Problem
+
+Po-Hsuan (Cameron) Chen netID:pohsuan
+Yingfei Wang netID: yingfei
+
+In the final project, we are trying to propose a boosting regression algorithm seeking to minimize the loss function while only using a sparse amount of weak predictor. We are planning to impose sparsity constraint on the ouput of gradient boosting [1] to select a sparse linear model for regression problem. The sparse representation is interested in identifying the most basic weak predictors that represent the whole dataset. We are interested in the case that the number of weak predictor, such as linear functions, step functions, quadratic functions, etc, is larger than the number of training data we have. In this case, an unconstraint loss minimization is inadequate because under the scenario of aggregating the weak predictor, the composite predictor is likely to overfit the data. Therefore, the common practice is to impose a sparsity constraint on the weight of weak predictor to obtained a regularized problem. We plan to apply forward-backward greedy algorithm [2] to select the predictors. The algorithm provide a framework to include and exclude the weak predictors generated while running gradient boosting.
+
+
+
+Reference:
+[1] Friedman, Jerome H. "Greedy function approximation: a gradient boosting machine.(English summary)." Ann. Statist 29.5 (2001): 1189-1232.
+[2] Zhang, Tong. "Adaptive forward-backward greedy algorithm for sparse learning with linear models." NIPS, 2008.

@@ -1,0 +1,116 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset Formula $\mathcal{L}_{j_{1}\rightarrow j_{2}}(\mathbf{\alpha},a)=\sum_{i=1}^{m}\frac{1}{2}(y_{i}-\sum_{k=1}^{|\mathcal{H}|}\alpha_{k}h_{k}(x_{i})+\frac{a}{2}h_{j_{1}}(x_{i})-\frac{a}{2}h_{j_{2}}(x_{i}))^{2}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $ $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+-\frac{\partial\mathcal{L}_{j_{1}\rightarrow j_{2}}(\mathbf{\alpha},a)}{\partial a} & =\sum_{i=1}^{m}\bigg((y_{i}-\sum_{k=1}^{|\mathcal{H}|}\alpha_{k}h_{k}(x_{i})+\frac{a}{2}h_{j_{1}}(x_{i})-\frac{a}{2}h_{j_{2}}(x_{i}))(\frac{1}{2}h_{j_{2}}(x_{i})-\frac{1}{2}h_{j_{1}}(x_{i}))\bigg)\\
+ & =\sum_{i=1}^{m}\bigg((y_{i}-\sum_{k=1}^{|\mathcal{H}|}\alpha_{k}h_{k}(x_{i})+\frac{a}{2}h_{j_{1}}(x_{i})-\frac{a}{2}h_{j_{2}}(x_{i}))(\frac{1}{2}h_{j_{2}}(x_{i})-\frac{1}{2}h_{j_{1}}(x_{i}))\bigg)\\
+ & =\sum_{i=1}^{m}\bigg((y_{i}-\sum_{k=1}^{|\mathcal{H}|}\alpha_{k}h_{k}(x_{i}))(\frac{1}{2}h_{j_{2}}(x_{i})-\frac{1}{2}h_{j_{1}}(x_{i}))-\frac{a}{4}(h_{j_{2}}(x_{i})-h_{j_{1}}(x_{i}))^{2}\bigg)\\
+\\
+ & =\sum_{i=1}^{m}\bigg(\frac{a}{4}(h_{j_{2}}(x_{i})-h_{j_{1}}(x_{i}))^{2}-(y_{i}-\sum_{k=1}^{|\mathcal{H}|}\alpha_{k}h_{k}(x_{i}))(\frac{1}{2}h_{j_{2}}(x_{i})-\frac{1}{2}h_{j_{1}}(x_{i}))\bigg)\\
+\\
+ & \sum_{i=1}^{m}\bigg(\frac{a}{4}(h_{j_{2}}(x_{i})-h_{j_{1}}(x_{i}))^{2}-(y_{i}-\sum_{k=1}^{|\mathcal{H}|}\alpha_{k}h_{k}(x_{i}))(\frac{1}{2}h_{j_{2}}(x_{i})-\frac{1}{2}h_{j_{1}}(x_{i}))\bigg)=0\\
+ & \frac{a}{4}\sum_{i=1}^{m}(h_{j_{2}}(x_{i})-h_{j_{1}}(x_{i}))^{2}-\sum_{i=1}^{m}(y_{i}-\sum_{k=1}^{|\mathcal{H}|}\alpha_{k}h_{k}(x_{i}))(\frac{1}{2}h_{j_{2}}(x_{i})-\frac{1}{2}h_{j_{1}}(x_{i}))=0\\
+ & a=\frac{4\sum_{i=1}^{m}(y_{i}-\sum_{k=1}^{|\mathcal{H}|}\alpha_{k}h_{k}(x_{i}))(\frac{1}{2}h_{j_{2}}(x_{i})-\frac{1}{2}h_{j_{1}}(x_{i}))}{\sum_{i=1}^{m}(h_{j_{2}}(x_{i})-h_{j_{1}}(x_{i}))^{2}}\\
+\\
+\\
+\\
+\\
+ & \frac{1}{2}\sum_{i=1}^{m}\bigg(h_{j_{2}}(x_{i})(y_{i}-\sum_{k=1}^{|\mathcal{H}|}\alpha_{k}h_{k}(x_{i}))\bigg)-\frac{1}{2}\sum_{i=1}^{m}\bigg(h_{j_{1}}(x_{i})(y_{i}-\sum_{k=1}^{|\mathcal{H}|}\alpha_{k}h_{k}(x_{i}))\bigg)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+-
+\begin_inset Formula $\frac{\partial\mathcal{L}(\mathbf{\alpha},0)}{\partial\alpha_{j_{2}}}$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $j_{2}=\mbox{argmax}$
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
