@@ -3,7 +3,7 @@
 % contact: pohsuan [at] princeton [dot] edu
 
 % loss function: l2 loss function
-% hypothesis space : step functions 0->1, 0->-1, -1->0, 1->0;
+% hypothesis space : step functions 0->1, 0->-1, -1->0, 1->0
 
 function [alpha_result] = gradient_boosting(data,num_iter)
 
