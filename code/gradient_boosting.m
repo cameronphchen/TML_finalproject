@@ -5,19 +5,9 @@
 % loss function: l2 loss function
 % hypothesis space : step functions 0->1, 0->-1, -1->0, 1->0;
 
-%function [alpha] = gradient_boosting(data,num_iter)
-data=[
-     1     0
-     2     0
-     3     0
-     4     1
-     6     1
-     7     2
-     9     2
-    10     2
-];
+function [alpha_result] = gradient_boosting(data,num_iter)
 
-num_iter=5;
+
 
 
 
@@ -25,9 +15,11 @@ d_length = size(data,1);
 d_min  = min(data(:,1));
 d_max  = max(data(:,1));
 d_range = d_max -d_min +1;
-alpha = zeros(d_length,num_iter+1);
-% h: 1:0->1, 2:0->-1, 3:1->0, 4:-1->0;
-h = zeros(d_length,num_iter+1);
+% alpha (location of activation, type of activation, iterations)
+% type of activation 
+% 1:0->1, 2:0->-1, 3:1->0, 4:-1->0;
+alpha = zeros(d_length,4,num_iter+1);
+
 r = zeros(d_range,num_iter+1);
 
 for i=2:num_iter+1
@@ -38,10 +30,11 @@ for i=2:num_iter+1
 
   F = zeros(d_range,1);
   for k = 1:d_length
-    step_func = step_function(data(k,1),h(k,i-1),d_range);
-    if norm(step_func(data(:,1)))~=0
-      F = F + step_function(data(k,1),h(k,i-1),d_range)/...
-          norm(step_func(data(:,1)))*alpha(k,i-1);
+    for s = 1:4
+      if alpha(k,s,i-1) ~=0
+        step_func = step_function(data(k,1),s,d_range);
+        F = F + step_func/norm(step_func(data(:,1)))*alpha(k,s,i-1);
+      end
     end
   end
 
@@ -49,10 +42,9 @@ for i=2:num_iter+1
     r(data(k,1),i) = data(k,2) - F(data(k,1));
   end
 
-  if norm(r(:,i))==0
-    alpha(:,num_iter+1)=alpha(:,i-1);
-    h(:,num_iter+1)=h(:,i-1);
-    fprintf('residual = 0, break early\n');
+  if norm(r(:,i))<0.00001
+    alpha(:,:,num_iter+1)=alpha(:,:,i-1);
+    fprintf('residual = 0, break early at %d-th iteration\n',i)
     break  
   end
 
@@ -65,15 +57,15 @@ for i=2:num_iter+1
   t_max_type =0;
   tmp_max =-inf;
   for t=1:d_length
-    for l=1:4
-      fprintf('t:%d,l:%d',t,l)
-      step_func = step_function(data(t,1),l,d_range);
-      norm_step = step_function(data(t,1),l,d_range)/norm(step_func(data(:,1)))
-      tmp = r(data(:,1),i)'*norm_step(data(:,1))
-      if (tmp > tmp_max) && (alpha(t,i-1)==0)
+    for s=1:4
+      %fprintf('t:%d,s:%d',t,s)
+      step_func = step_function(data(t,1),s,d_range);
+      norm_step = step_func/norm(step_func(data(:,1)));
+      tmp = r(data(:,1),i)'*norm_step(data(:,1));
+      if (tmp > tmp_max) 
         tmp_max = tmp;
         t_max = t;
-        t_max_type = l;
+        t_max_type = s;
       end
     end
   end
@@ -81,43 +73,40 @@ for i=2:num_iter+1
 
   %epsilon
   step_func = step_function(data(t_max,1),t_max_type,d_range);
-  norm_step = step_function(data(t_max,1),t_max_type,d_range)/...
-              norm(step_func(data(:,1))); 
+  norm_step = step_func/norm(step_func(data(:,1))); 
   epsilon = r(data(:,1),i)'*norm_step(data(:,1));
 
   %update alpha
-  alpha(:,i) = alpha(:,i-1);
-  alpha(t_max,i) = alpha(t_max,i) + epsilon;
-  h(:,i) = h(:,i-1);
-  h(t_max,i) = t_max_type;
-
+  alpha(:,:,i) = alpha(:,:,i-1);
+  alpha(t_max,t_max_type,i) = alpha(t_max,t_max_type,i) + epsilon;
 end
 
 
 F_end = 0;
 for k = 1:d_length
-  step_func = step_function(data(k,1),h(k,end),d_range);
-  if norm(step_func(data(:,1)))~=0
-    F_end = F_end + step_function(data(k,1),h(k,end),d_range)/...
-    norm(step_func(data(:,1)))*alpha(k,end);
+  for s=1:4
+    if alpha(k,s,end) ~= 0
+      step_func = step_function(data(k,1),s,d_range);
+      F_end = F_end + step_func/norm(step_func(data(:,1)))*alpha(k,s,end);
+    end
   end
 end
+
 F_end;
 r_end = zeros(d_range,1);
 for k=1:d_length
   r_end(data(k,1)) = data(k,2) - F_end(data(k,1));
 end
 
-
+alpha_result = alpha(:,:,end);
 fprintf('result')
-r
-h
-alpha
+%r
+%alpha
 
 
 figure
 hold on
 grid on
-scatter(data(:,1),data(:,2),1000*ones(d_length,1),'.')
-plot(d_min:d_max, F_end, 'r', 'Linewidth',2)
+scatter(data(:,1),data(:,2),1000*ones(d_length,1),'.');
+plot(d_min:d_max, F_end, 'r', 'Linewidth',2);
 
