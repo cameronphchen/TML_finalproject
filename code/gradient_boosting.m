@@ -16,7 +16,8 @@ d_max  = max(data(:,1));
 % 1:0->1, 2:0->-1, 3:1->0, 4:-1->0;
 alpha = zeros(d_length,4,num_iter+1);
 
-r = zeros(d_range,num_iter+1);
+%r = zeros(d_range,num_iter+1);
+r = zeros(d_length,num_iter+1);
 F = zeros(d_range,num_iter+1);
 
 for i=2:num_iter+1
@@ -35,7 +36,8 @@ for i=2:num_iter+1
   end
 
   for k=1:d_length
-    r(data(k,1),i-1) = data(k,2) - F(data(k,1),i-1);
+    %r(data(k,1),i-1) = data(k,2) - F(data(k,1),i-1);
+    r(k,i-1) = data(k,2) - F(data(k,1),i-1);
   end
 
   if norm(r(:,i-1))<0.00001
@@ -57,7 +59,8 @@ for i=2:num_iter+1
       %fprintf('t:%d,s:%d',t,s)
       step_func = step_function(data(t,1),s,d_range);
       norm_step = step_func/norm(step_func(data(:,1)));
-      tmp = r(data(:,1),i-1)'*norm_step(data(:,1));
+      %tmp = r(data(:,1),i-1)'*norm_step(data(:,1));
+      tmp = r(:,i-1)'*norm_step(data(:,1));
       if (tmp > tmp_max) 
         tmp_max = tmp;
         t_max = t;
@@ -69,7 +72,9 @@ for i=2:num_iter+1
   %epsilon
   step_func = step_function(data(t_max,1),t_max_type,d_range);
   norm_step = step_func/norm(step_func(data(:,1))); 
-  epsilon = r(data(:,1),i-1)'*norm_step(data(:,1));
+  %epsilon = r(data(:,1),i-1)'*norm_step(data(:,1));
+  epsilon = r(:,i-1)'*norm_step(data(:,1));
+
 
   %update alpha
   alpha(:,:,i) = alpha(:,:,i-1);
@@ -87,7 +92,8 @@ for k = 1:d_length
 end
 
 for k=1:d_length
-  r(data(k,1),num_iter+1) = data(k,2) - F(data(k,1),i-1);
+%  r(data(k,1),num_iter+1) = data(k,2) - F(data(k,1),i-1);
+  r(k,num_iter+1) = data(k,2) - F(data(k,1),i-1);
 end
 
 %r_end = zeros(d_range,1);

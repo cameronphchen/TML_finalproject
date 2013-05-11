@@ -29,9 +29,9 @@ fprintf('loading data')
 load([ options.input_path options.data_name '_data.mat']);
 
 %%%
-%%%tmp=training_data;
-%%%training_data = testing_data;
-%%%testing_data = tmp;
+tmp=training_data;
+training_data = testing_data;
+testing_data = tmp;
 %%%
 
 
@@ -80,7 +80,7 @@ hold on
 grid on
 plot(1:options.num_iter+1,training_loss,'b','Linewidth',2)
 plot(1:options.num_iter+1,testing_loss,'r','Linewidth',2)
-plot(1:options.num_iter+1,tmp_loss,'g','Linewidth',2)
+%plot(1:options.num_iter+1,tmp_loss,'g','Linewidth',2)
 legend('training error','testing error')
 hold off
 
