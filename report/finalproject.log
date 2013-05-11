@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  7 MAY 2013 10:24
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  10 MAY 2013 17:22
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -270,48 +270,53 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 32.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 34.
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
+Missing character: There is no Ò in font ptmr7t!
+Missing character: There is no Ó in font ptmr7t!
+Missing character: There is no Þ in font ptmr7t!
  [1
 
-{/usr/local/texlive/2012/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
+{/usr/local/texlive/2012/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+[2] [3] [4] [5]
+Overfull \hbox (4.277pt too wide) in paragraph at lines 263--263
+[]\OT1/cmr/m/n/10 (2\OML/cmm/m/it/10 []; []\OT1/cmr/m/n/10 )$  
+ []
 
-[4] [5]
-Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [6]
+Overfull \hbox (7.78177pt too wide) in paragraph at lines 214--271
+ [] 
+ []
+
+[6]
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <10> not available
-(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 286.
-
-[7] (./finalproject.aux) ) 
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 288.
+ (./finalproject.bbl) [7] (./finalproject.aux) ) 
 Here is how much of TeX's memory you used:
- 3554 strings out of 493488
- 45526 string characters out of 3141326
- 135006 words of memory out of 3000000
- 6844 multiletter control sequences out of 15000+200000
- 21887 words of font info for 46 fonts, out of 3000000 for 9000
+ 3569 strings out of 493488
+ 45769 string characters out of 3141326
+ 135037 words of memory out of 3000000
+ 6855 multiletter control sequences out of 15000+200000
+ 23571 words of font info for 48 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 37i,15n,39p,2434b,354s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/local/texlive/2012/texmf-dist/fonts/enc/dvips/b
-ase/8r.enc}</usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/c
-mex10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cmext
-ra/cmex7.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmmi10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmmi5.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-mi7.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
-b10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cmextra
-/cmmib7.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmr10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-r5.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.
-pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.p
-fb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb
-></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><
-/usr/local/texlive/2012/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local
-/texlive/2012/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/
-2012/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2012/texmf
--dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on finalproject.pdf (7 pages, 203660 bytes).
+ 37i,26n,39p,2434b,521s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/local/texlive/2012/texmf-
+dist/fonts/enc/dvips/base/8r.enc}</usr/local/texlive/2012/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1
+/public/amsfonts/cmextra/cmex7.pfb></usr/local/texlive/2012/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2012/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1
+/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmmib10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/p
+ublic/amsfonts/cmextra/cmmib7.pfb></usr/local/texlive/2012/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1
+/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmr7.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmsy7.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/urw/times/
+utmb8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/urw/times/utmbi8a.pf
+b></usr/local/texlive/2012/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/lo
+cal/texlive/2012/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on finalproject.pdf (7 pages, 205818 bytes).
 PDF statistics:
  97 PDF objects out of 1000 (max. 8388607)
  70 compressed objects within 1 object stream

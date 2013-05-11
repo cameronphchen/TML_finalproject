@@ -32,57 +32,40 @@ Yingfei Wang \\
 \maketitle
 
 \begin{abstract}
-abstract
+
+We proposed a boosting regression algorithm that seeks to minimize the loss function while only using a sparse amount of weak predictor.  We are interested in the case that the number of weak predictor, such as linear functions, step functions, quadratic functions, etc, is much larger than the number of training data we have. In this case, an unconstraint loss minimization is inadequate because under the scenario of aggregating the weak predictor, the composite predictor is likely to overfit the data.  We imposed sparsity constraint on the output of gradient boosting \cite{zhang2008adaptive} to select a sparse linear model for regression problem.  The algorithm can be
+viewed as a coordinate descent method for the $l1$-regularized of the loss function used in the gradient boosting algorithm.
+
 \end{abstract}
 
 \section{Introduction}
+Boosting is a generic modeling approach which has attracted a lot of attention in the machine learning, data mining and statistics communities.  Boosting can most generally be described as a method for iteratively building an
+additive model $F(x)=\sum_j \alpha_j h_j(x)$.  The essence of boosting is to design a way to ÒadaptivelyÓ select the next increment at each step to improve the fit.   If the number of weak predictor, such as linear functions, step functions, quadratic functions, etc, is much larger than the number of training data we have, an unconstraint loss minimization is inadequate because under the scenario of aggregating the weak predictor, the composite predictor is likely to overfit the data.   Hence, various regularization methods are considered for different boosting algorithms.  For example, John Duchi and Yoram Singer studied penalties for Adaboost based on the $l_1$,
+$l_2$, and $l_{\infty}$ norms of the predictor and introduce
+mixed-norm penalties that build upon the initial penalties\cite{duchi2009boosting}.   Tong Zhang and Bin Yu exploited early stopping to regularize boosting fitting \cite{zhang2005boosting}.  Jerome Friedman used "shrinkage" to deal with regularization \cite{friedman2001greedy}. 
+By adding a spatial regularization kernel to a standard loss function formulation
+of the boosting problem,  James Xiang Zhang  {\it{et al.}} added a spatial regularization kernel to a standard loss function formulation to regularize boosting for classification problem \cite{xiang2009boosting}.
 
-\section{Preliminaries}
+Here, we particularly interest in impose sparsity on one of the most popular boosting algorithm for regression, called gradient boosting algorithm.  To avoid overfitting, many regularization methods were considered in other literatures.  For example, Hastie {\it et al.}  modified gradient boosting algorithm by impose regularization using shrinkage \cite{aaa}.  Friedman proposed another algorithm "stochastic gradient boosting" to deal with regularization \cite{friedman2002stochastic}. To be more specific,  he proposed that at each iteration of the algorithm, a base learner should be fit on a subsample of the training set drawn at random without replacement, where subsample size is some constant fraction of the size of the training set. Smaller values of this constant fraction introduce randomness into the algorithm and help prevent overfitting, acting as a kind of regularization.
 
-\subsection{Boosting algorithms for classification}
-\subsubsection{Classfication problems}
-Based on labeled training data, the goal of classification is to assign a label for a new objects. During training, a learning algorithm receives as input a training set of labeled examples
-called the training examples. The output of the learning algorithm is a prediction rule called
-a hypothesis, which can be treated as a function that maps instances to labels. In classification problems, we assume that the examples are chosen randomly from the same but unknown distribution $\mathcal{D}$.
+Our main contribution is to propose a new algorithm which directly solves the $l_1$ regularized loss minimization problem. $l_1$ regularization has been extensively studied and understood in many literatures, such as \cite{tibshirani1996regression,schmidt2005least, ng2004feature}. Use $l_1$ regularization to impose sparsity can lead to a parsimonious
+model that uses a small number of parameters.  Enforcing sparsity may detect the most discriminative information and be a way to avoid overÞtting. In this paper, 
+ We compare this algorithm with gradient boosting theoretically and numerically. We will show that  gradient boosting can be viewed as a degenerate case of our new algorithm.  Our experiments on real world data show
+show that our algorithm achieves better generalization than gradient boosting with sparser composite hypotheses.  
+ \section{Preliminaries}
 
-To measure the quality of a given classifier, we use its error rate. The fraction of mistakes on the training set is called the training error, denoted as $\widehat{err}$.  The generalization error of a classifier measures the probability of misclassifying a random example from the distribution $\mathcal{D}$.  Generalization error of a hypothesis $h$ is denoted as $err_\mathcal{D}(h)$.
-\subsubsection{Boosting}
-A boosting algorithm is an algorithm that converts a weak learning algorithm
-into a strong learning algorithm. Like any learning algorithm, a boosting algorithm takes as input a set of training examples $(x_1,y_1),(x_2,y_2),...,(x_m,y_m)$ from unknown distribution $\mathcal{D}$, where each $x_i$ is an instance from the instance space $\mathcal{X}$ and each $y_i$ is the associated label. We assume that there are only two classes, $-1$ and $+1$. It has access to a weak learner $A$ which for $\forall {D}$, given examples drawn from $D$,  computes $h \in \mathcal{H}$ (the hypothesis space of the weak learner) such that $Pr[err_D(h) \le \frac{1}{2}- \gamma] \ge 1-\delta$. The goal of a boosting algorithm is to find $h$ with $err_ {\mathcal{D}} \le \epsilon$.
+\subsection{Boosting algorithms for regression}
+\subsubsection{Regression problems}
+Let $\mathcal{X}$ denote the input space and $\mathcal{Y}$ a measurable subset of $\mathcal{R}$. In regression problems, we assume that the examples are chosen randomly from the same but unknown distribution $\mathcal{D}$. During training, a learning algorithm receives a labeled training set $S=((x_1,y_1),(x_2,y_2),...,(x_m,y_m)) \in (\mathcal{X} \times (\mathcal{Y}))^m$ with $y_i=c(x_i)$. The output of the learning algorithm is a prediction rule called
+a hypothesis $h \in \mathcal{H}$, which can be treated as a function mapping $\mathcal{X}$ to $\mathcal{Y}$.
 
-AdaBoost is one of the most famous boosting algorithms. The pseudocode is shown below.
-\begin{algorithm}[H]
-\caption{AdaBoost}
-\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
- \SetAlgoLined
+To measure the quality of a given hypothesis, we use loss function $L: \mathcal{Y} \times \mathcal{Y} \rightarrow \mathcal{R}_+$ to measure the magnitude of error(the difference between the real-valued label predicted and the true value). 
 
- \Input{$m$ examples $(x_1,y_1)\dots(x_m,y_m)$ where $x_i \in \mathcal{X}$ $y_i \in \{-1,+1\}$}
-    \BlankLine
-  Initialize: $D_1(i) =1/m$, $\forall i=1,...,m$
-  \BlankLine
-  For $t=1,2,...,T$:  \BlankLine
-      ~~~~~$\bullet$ construct $D_t$.  \BlankLine
-      ~~~~~$\bullet$  run $A$ on $D_t$ get weak hypothesis $h_t$.  \BlankLine
-      ~~~~~$\bullet$  $\epsilon_t=err_{D_t}(h_t)=\frac{1}{2}-\gamma_t$. \BlankLine
-      ~~~~~$\bullet$  $\alpha_t=\frac{1}{2}\ln(\frac{1-\epsilon_t}{\epsilon_t}) > 0$.  \BlankLine
-      ~~~~~$\bullet$  update, for $i=1,2,...,m$:
-               $$ D_{t+1}(i)=\frac{D_t(i)}{Z_t} \times  \{
-    						 \begin{cases}
-     						 e^{-\alpha_t} &\text{if } h_t(x_i)=y_i\\
-     						 e^{\alpha_t}   &\text{if }   h_t(x_i) \neq  y_i
-   						 \end{cases} .$$ \BlankLine
-\Output{$$H: H(x)=\mathrm{sign}\Bigg{(}\sum_{t=1}^{T}\alpha_t h_t(x) \Bigg{)}$$}
-\end{algorithm}
+Given a hypothesis space $\mathcal{H}$, the goal of regression is to find a hypothesis $h \in \mathcal{H}$ with small expected loss with respect to the target $f$: $E_{\mathcal{D}} [L(c(x),h(x))]$. The empirical loss is defined as $\frac{1}{m} \sum_{i=1}^m L(y_i,h(x_i))$.
 
+\subsubsection{Gradient Boosting}
 
-\subsection{Sparse Representation}
-Consider a linear prediction model that the target composite predictor is a sparse combination of a set of weak predictor. The sparse representation is interested in identifying those basic weak predictor. We are interested in the case that the number of weak predictor, such as linear functions, step functions, quadratic functions, etc, is larger then the number of training data we have. In this case, an unconstraint error minimization is inadequate because under the scenario of aggregating the weak predictor, the composite predictor is likely to overfit the data. Therefore, the common practice is to impose a sparsity constraint on the weight $\boldsymbol\alpha$ to obtained a regularized problem. We define $\| \boldsymbol\alpha \|_0=\{i:\alpha_i\neq0 \}$. The constraint will be $\| \boldsymbol\alpha \|_0\leq k$, where $k$ is a predefined parameter based on our a priori understanding of the problem. A sparse representation of the composite predictor is easier to store, compute and interpret. More over,  a simpler predictor is more likely to generalize well to different input data and get a higher prediction accuracy.
-
-
-\section{Gradient Boosting}
-The goal of regression is to find a function $F(x) \in \{\sum_{i=1}^{T}\alpha_ih_i(x)+const \big| h \in \mathcal{H}\}$ to approximate the true value $y=c(x)$ so as to minimize the expected value of some specified loss function L(y, F(x)). Here $\mathcal{H}$ is called weak hypothesis space, training and test examples are i.i.d. from the same yet unknown distribution $\mathcal{D}$ and $y$ is real valued.
+The goal of boosting for regression is to find a function $F(x) \in \{\sum_{i=1}^{T}\alpha_ih_i(x)+const \big| h \in \mathcal{H}\}$ to approximate the true value $y=c(x)$ so as to minimize the expected value of some specified loss function L(y, F(x)). Here $\mathcal{H}$ is called weak hypothesis space, training and test examples are i.i.d. from the same yet unknown distribution $\mathcal{D}$ and $y$ is real valued.
 
 Gradient Boosting tries to find an approximation $\hat{F}(x)$ that minimizes the average value of the loss function on the training set. It does so by starting with a model, consisting of a constant function $F_0(x)$, and incrementally expanding it in a greedy fashion:
 \[F_0(x)=\arg\min_\alpha \sum_{i=1}^{m}L(y_i,\alpha)\]
@@ -111,36 +94,17 @@ $F_t(x)=F_{t-1}(x)+\alpha_t h_t(x)$
 \Output{$F_T(x)$}
 \end{algorithm}
 
-\paragraph{Loss Function}
-\[ \mathcal{L}(\boldsymbol\alpha) = \sum_{i=1}^m L(y_i - \sum_{t=1}^T \alpha_t h_t(x_i))\]
-\paragraph{How do we interpret the final predictor of it?}
+\paragraph{Loss Function of Gradient Boosting}
+\[ \mathcal{L}(\boldsymbol\alpha) = \sum_{i=1}^m L(y_i,  \sum_{t=1}^T \alpha_t h_t(x_i)+const)\]
 
-\section{Adaboost Regression}
-\begin{algorithm}[H]
-\caption{Adaboost.RT Algorithm}
-\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
- \SetAlgoLined
 
- \Input{$m$ examples $(x_1,y_1)\dots(x_m,y_m)$, weak learning algorithm $A$, threshold $\phi$}
+\subsection{Sparse Representation}
+Consider a linear prediction model that the target composite predictor is a sparse combination of a set of weak predictor. The sparse representation is interested in identifying those basic weak predictor. We are interested in the case that the number of weak predictor, such as linear functions, step functions, quadratic functions, etc, is larger then the number of training data we have. In this case, an unconstraint error minimization is inadequate because under the scenario of aggregating the weak predictor, the composite predictor is likely to overfit the data. Therefore, the common practice is to impose a sparsity constraint on the weight $\boldsymbol\alpha$ to obtained a regularized problem. We define $\| \boldsymbol\alpha \|_0=\{i:\alpha_i\neq0 \}$. The constraint will be $\| \boldsymbol\alpha \|_0\leq k$, where $k$ is a predefined parameter based on our a priori understanding of the problem. A sparse representation of the composite predictor is easier to store, compute and interpret. More over,  a simpler predictor is more likely to generalize well to different input data and get a higher prediction accuracy.
 
-  \BlankLine
 
-  $\forall i,\;D_t(i)=\frac{1}{m}$\\
-  $\epsilon_t=0$\\
- \For{$t=1$ to $T$}{
-	run $A$ on $D_t$ get  $f_t$\\
-	are$_t(i)= |\frac{f_t(x_i)}{y_i}|$\\
-	$\epsilon_t=\sum_{i:are_t(i)>\phi}D_t(i)$\\
-	$\beta_t=\epsilon_t^n$, where $n=$power coefficient\\
-	$D_{t+1}(i)=\frac{D_{t}(i)}{Z_{t}}	\times XXXXX$
-	
- }
- \Output{final predictor $F(x)=\frac{\sum_t(log\frac{1}{\beta_t}f_t(x))} {\sum_t(log\frac{1}{\beta_t})}$}
-\end{algorithm}
-\paragraph{What's the loss function of AdaBoost.RT?}
-\paragraph{How do we interpret the final predictor of it?}
+
+
+
 \section{Adding Sparsity Constraint}
 The output of boosting algorithm is a linear prediction model. Based on the structure of boosting algorithm, it will keep adding weak predictor into the final predictor to minimize the prediction error. In addition to prediction accuracy, sparsity of the composite predictor is a desirable characteristic. The sparsity over here means that there are only relative small amount of nonzero weight assigned to the composite predictor. 
 \section{Sparse Gradient Boosting Regression}
@@ -236,39 +200,77 @@ Set $\frac{\partial\mathcal{L}_{j_{1}\rightarrow j_{2}}(\mathbf{\alpha},a)}{\par
 \subsection{Compare with gradient boosting}
 Before we start to run Sparse Gradient Boosting algorithm, we first run Gradient Boosting until the coefficients hit the regularization boundary. Assume at this point, $F(x)=\sum_{j=1}^{\mathcal{H}} \alpha' h_j(x)=\sum_{j=1}^{\mathcal{H}} \alpha \frac{h_j(x)}{\|h_j(x)\|_2},$  with $\sum_{j=1}^{\mathcal{H}}\alpha_j = C$. We then compare the performance of continuing Gradient Boosting and switching to Sparse Gradient Boosting after this point.  Unlike Gradient Boosting which only adds weak hypotheses, Sparse Gradient Boosting can also reduce the weight of the worst active hypothesis and transfer the weighted from it to the best one, keeping the coefficients within the regularization boundary (which imposes sparsity on the solution).
 
-Sparse Gradient Boosting is indeed a natural extension of Gradient Boosting.  Recall that in Gradient Boosting algorithm, the  second step in each iteration t is to fit a weaker learner $h_t(x)$ to pseudo-residual $r_{i,t}$.  Different weak learning algorithms, e.g. least-square estimation, will choose different $h_t$. Here, we choose $h_t=\mbox{argmax}_{h}   \frac{\sum_{i=1}^{m}h(x_{i})r_{i,t} }  {\| h \|_2} $, which is the same as $h_{t_{max}}$ chosen by Sparse Gradient Boosting.  Next, we'll first show why choosing weak hypothesis this way is meaningful, and then we'll show that under this weak learner, each iteration step of Gradient Boosting can be viewed as a degenerate case of that of Sparse Gradient Boosting.
+Sparse Gradient Boosting is indeed a natural extension of Gradient Boosting.  Recall that in Gradient Boosting algorithm, the  second step in each iteration t is to fit a weaker learner $h_t(x)$ to pseudo-residual $r_{i,t}$.  Different weak learning algorithms, e.g. least-square estimation, will choose different $h_t$. Here, we choose $h_t=\mbox{argmax}_{h}   \frac{\sum_{i=1}^{m}h(x_{i})r_{i,t} }  {\| h \|_2} $, which is the same as $h_{t_{max}}$ chosen by Sparse Gradient Boosting.  Next, we'll first show why choosing weak hypothesis this way is meaningful, and then we'll show that under this weak learner, each iteration step of Gradient Boosting can be viewed as a degenerate case  of Sparse Gradient Boosting.
 
 First, as we mentioned previously, in Gradient Boosting, we want to choose the weak hypothesis $h_t$ that most closely approximates the gradient of $L$ which is $r_t$ at time $t$.  As before, we view $L(y,F)$ not as a functional of $F$, but as a vector of values $<F(x_1),F(x_2),...,F(x_m)>$.  Let  $\boldsymbol  h=<h(x_1), h(x_2),...,h(x_m)>$ and  residual vector $\boldsymbol r_{t}=<r_{1,t},r_{2,t},...r_{m,t}>$ , then we can rewrite the hypothesis we choose on round $t$ as $h_t=\mbox{argmax}_{h}   \frac{\sum_{i=1}^{m}h(x_{i})r_{i,t} }  {\| h \|_2} =\mbox{argmax}_{h}   \frac{\boldsymbol h \cdot \boldsymbol r_t} {\| \boldsymbol h \|_2 \|\boldsymbol r_{t}\|_2}  $ . Note that $  \frac{\boldsymbol h \cdot \boldsymbol r_t} {\| \boldsymbol h \|_2 \|\boldsymbol r_{t}\|_2}  $ equals the cosine of the angle between these two vectors. The larger this quantity, the smaller the angle, and the closer the two vectors. In particular, if it equals to $1$, $\boldsymbol h$ is parallel to $\boldsymbol r_t$, then as in Gradient Boosting, $\boldsymbol h$ is a perfect  substitute of $\boldsymbol r_t$, which is the negative gradient of $L$. And here, we want all the $\alpha_j$'s are greater than or equal to $0$, so when the angle between $\boldsymbol h$ and $\boldsymbol r_t$ equal $180^o$, it is not preferable. In order to achieve this, we design the hypothesis space such that for each hypothesis $h\in \mathcal{H}$, $-h$ is also in $\mathcal{H}$.
 
 Next, we'll show that when we choose $h_t$ like this on each round, the Gradient Boosting can be viewed as degenerate case of Sparse Boosting. To see this first recall that  after choosing $h_t$, we choose $\alpha_t = \text{argmin}_\alpha \Sigma_{i=1}^{m}L(y_i,F_{t-1}(x_i)+\alpha h_t(x_i))$ and then add $\alpha_t h_t(x)$ to current $F_{t-1}$. Under $l_2$ loss, we can derive a closed-form expression of $\alpha_t$. $\Sigma_{i=1}^{m}L(y_i,F_{t-1}(x_i)+\alpha h_t(x_i))= \Sigma_{i=1}^m(y_i-F_{t-1}(x_i)-\alpha h_t(x_i))^2=\sum_{i=1}^m (r_{i,t}-\alpha h_t(x_i))^2$. We take first derivative with respect to $\alpha$ and set it to $0$,  we get $\alpha_t= \frac{\sum_{i=1}^m r_{i,t} h(x_i)}{\sum_{i=1}^m h^2(x_i)}=\frac{\sum_{i=1}^m r_{i,t} h(x_i)}{\|h_t\|_2}$.  Then Gradient Boosting add $\alpha_t h_t(x)= \sum_{i=1}^m r_{i,t} h_{t}(x_i) \frac{h_t(x)}{\|h_t\|_2}$ to $F_{t-1}(x)$. In Sparse Gradient Boosting, $h_{t_{max}}$ is the same as $h_t$ in Gradient Boosting on the same round. Now if we remove the requirement that $\alpha_{t_{min}}>0$, which means that $h_{t_{min}}$ is not necessary an active hypothesis, then the worst hypothesis is just the negation of the best one $h_{t_{max}}$ ( from the selection of hypothesis space, we know that the negation of the best $h$ also belongs to $\mathcal{H}$). If we allow the coeffecient of the worst hypothesis to be negative, then we can just choose the step size $\epsilon = \frac{2\sum_{i=1}^{m}r_{i,t}  (\frac{h_{t_{max}}(x_{i})}  {\| h_{t_{max}}\|_2}  + \frac{h_{t_{max}}(x_{i})} {\| h_{t_{max}}\|_2} )}{\sum_{i=1}^{m}(  \frac{h_{t_{max}}(x_{i})} {\| h_{t_{max}}\|_2}+\frac{h_{t_{max}}(x_{i})} {\| h_{t_{max}}\|_2})^{2}}= \frac{\sum_{i=1}^m r_{i,t} h_{t_{max}}(x_i)}{\sum_{i=1}^m h_{t_{max}}^2(x_i)} \|h_{t_{max}}\|_2={\sum_{i=1}^m r_{i,t} h_{t_{max}}(x_i)}$. Then in Sparse Gradient Boosting algorithm, we add $\frac{\epsilon}{2} \frac{h_{t_{max}}(x)}{\|h_{t_{max}}\|_2}= \frac{1}{2}\sum_{i=1}^m r_{i,t} h_{t_{max}}(x_i)  \frac{h_{t_{max}}(x)}{\|h_{t_{max}}\|_2}$  and substract $\frac{\epsilon}{2} \frac{h_{t_{min}}(x)}{\|h_{t_{min}}\|_2}= -\frac{\epsilon}{2} \frac{h_{t_{max}}(x)}{\|h_{t_{max}}\|_2}$ to $F_{t-1}(x)$ . Since $h_t=h_{t_{max}}$, those two algorithms are adding the same amount of the same weak hypothesis to $F_{t-1}(x)$. That's to say,  Gradient Boosting can be viewed as a degenerate case of Sparse Gradient Boosting algorithm.
 
 
+In order to clearly illustrate the above mentioned comparison, we rewrite gradient boosting in a similar way as sparse gradient boosting algorithm and put them together as follows:
+\begin{table}[h]
 
+\begin{center}
+\begin{tabular}{ | p{6.7cm}  p{6.7cm} |}
+\hline
+Gradient Boosting &Sparse Gradient Boosting \\  
 
-
-\section{Modified Sparse Gradient Boosting Regression}
 \begin{algorithm}[H]
-\caption{Sparse Gradient Boosting}
-\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
- \SetAlgoLined
 
- \Input{$m$ examples $(x_1,y_1)\dots(x_m,y_m)$, weak learning algorithm $A$}
-  \BlankLine
- $F_0(x)=\text{argmin}_\alpha\sum_{i=1}^mL(y_i,\alpha)$\\
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+ \Input  {$m$ examples $(x_1,y_1)\dots(x_m,y_m)$, weak learning algorithm $A$}
+
+ $F_0(x)=\text{argmin}_\alpha\sum_{i=1}^mL(y_i,\alpha)$\\   %%%%%%Change
+ ~\\
  \For{$t=1$ to $T$}{
-$r_{i,t}=-\big[\frac{\partial L(y_i,F(x_i))}{\partial F(x_i)}\big]_{F(x)=F_{t-1}(x)},\;\forall i=1,\dots,m$\\
-$h_l=\mbox{argmax}_{h_j}   \frac{\sum_{i=1}^{m}h_{j}(x_{i})r_{i,t} }  {\| h_{j}\|_2} $\\
-$h_k=\mbox{argmin}_{h_j}   \frac{\sum_{i=1}^{m}h_{j}(x_{i})r_{i,t} }  {\| h_{j}\|_2} $\\
- $\epsilon = \min (2\alpha_l,\frac{2\sum_{i=1}^{m}r_i  (\frac{h_{j_2}(x_{i})}  {\| h_{j_2}\|_2}  - \frac{h_{j_1}(x_{i})} {\| h_{j_1}\|_2} )}{\sum_{i=1}^{m}(  \frac{h_{j_2}(x_{i})} {\| h_{j_2}\|_2}- \frac{h_{j_1}(x_{i})} {\| h_{j_1}\|_2})^{2}})$\\
-$\alpha_t \leftarrow \alpha_t + \frac{\epsilon}{2}$\\
-$\alpha_l \leftarrow \alpha_l - \frac{\epsilon}{2}$\\
+$r_{i,t}=-\big[\frac{\partial L(y_i,F(x_i))}{\partial F(x_i)}\big]_{F(x)=F_{t-1}(x)}$\\
+$h_{t}=\mbox{argmax}_{h_j}   \frac{\sum_{i=1}^{m}h(x_{i})r_{i,t} }  {\| h\|_2} $\\
+
+~\\
+~\\
+ $\epsilon =  \frac{2\sum_{i=1}^m r_{i,t} h(x_i)}{\sum_{i=1}^m h^2(x_i)}$ 
+ \\
+ 
+~\\
+ ~\\
+$\alpha_{t} \leftarrow \alpha_{t} + \frac{\epsilon}{2}$\\
+
+~\\
+~\\
+
 $F_t(x)=\sum_{i=1}^t\alpha_i \frac{h_i(x)} {\sum_{i=1}^{m}h_j^2(x_i)}$
 }
 
-\Output{$F_T(x)$}
-\end{algorithm}
+\Output {$F_T(x)$}
+\end{algorithm}         & 
+\begin{algorithm}[H]
+
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+ \Input  {$m$ examples $(x_1,y_1)\dots(x_m,y_m)$, weak learning algorithm $A$}
+
+ $F_0(x)=\text{argmin}_\alpha\sum_{i=1}^mL(y_i,\alpha)$\\   %%%%%%Change
+ ~\\
+ \For{$t=1$ to $T$}{
+$r_{i,t}=-\big[\frac{\partial L(y_i,F(x_i))}{\partial F(x_i)}\big]_{F(x)=F_{t-1}(x)}$\\
+$h_{t_{max}}=\mbox{argmax}_{h_j}   \frac{\sum_{i=1}^{m}h(x_{i})r_{i,t} }  {\| h\|_2} $\\
+$h_{t_{min}}=\mbox{argmin}_{h_j: \alpha_j>0}   \frac{\sum_{i=1}^{m}h(x_{i})r_{i,t} }  {\| h\|_2} $\\
+ $\epsilon = \min (2\alpha_{t_{min}},\frac{2\sum_{i=1}^{m}r_i  (\frac{h_{t_{max}}(x_{i})}  {\| h_{t_{max}}\|_2}  - \frac{h_{t_{min}}(x_{i})} {\| h_{t_{min}}\|_2} )}{\sum_{i=1}^{m}(  \frac{h_{t_{max}}(x_{i})} {\| h_{t_{max}}\|_2}- \frac{h_{t_{min}}(x_{i})} {\| h_{t_{min}}\|_2})^{2}})$\\
+$\alpha_{t_{max}} \leftarrow \alpha_{t_{max}} + \frac{\epsilon}{2}$\\
+$\alpha_{t_{min}} \leftarrow \alpha_{t_{min}} - \frac{\epsilon}{2}$\\
+$F_t(x)=\sum_{i=1}^t\alpha_i \frac{h_i(x)} {\sum_{i=1}^{m}h_j^2(x_i)}$
+}
+
+\Output {$F_T(x)$}
+\end{algorithm}     \\
+ 
+
+
+\end{tabular}
+\end{center}
+ \end{table}
+
 
 
 \section{Experiment}
@@ -285,10 +287,15 @@ consistent. It is permissible to reduce the font size to `small' (9-point)
 when listing the references. {\bf Remember that this year you can use
 a ninth page as long as it contains \emph{only} cited references.}
 
-\small{
-[1] Zhang, Tong. "Adaptive forward-backward greedy algorithm for sparse learning with linear models." NIPS, 2008.
 
-[2] Shrestha, D. L., and D. P. Solomatine. "Experiments with AdaBoost. RT, an improved boosting scheme for regression." Neural computation 18.7 (2006): 1678-1710.
-}
+\footnotesize{
+\bibliography{haha}
+\bibliographystyle{plain}}
 
+
+%\small{
+%[1] Zhang, Tong. "Adaptive forward-backward greedy algorithm for sparse learning with linear models." NIPS, 2008.
+
+%[2] Shrestha, D. L., and D. P. Solomatine. "Experiments with AdaBoost. RT, an improved boosting scheme for regression." Neural computation 18.7 (2006): 1678-1710.
+%}
 \end{document}
