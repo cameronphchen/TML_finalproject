@@ -13,18 +13,21 @@ function [s] = step_function(location, type,d_range)
 s = zeros(d_range,length(location));
 
 
-assert( (max(type)<=4)&&(min(type)>=0), 'type shold be <=4, and <=0');
-assert( length(location)==length(type), ...
-        'location length and type length should be the same');
+%assert( (max(type)<=4)&&(min(type)>=0), 'type shold be <=4, and <=0');
+%assert( length(location)==length(type), ...
+%        'location length and type length should be the same');
 for i = 1:length(location)
-  if type(i) == 1
-    s(location(i):end,i)=1;
-  elseif type(i) == 2
-    s(location(i):end,i)=-1;
-  elseif type(i) == 3
-    s(1:location(i),i)=1;
-  elseif type(i) == 4
-    s(1:location(i),i)=-1;
+  switch type(i) 
+    case 1
+      s(location(i):end,i)=1;
+    case 2
+      s(location(i):end,i)=-1;
+    case 3
+      s(1:location(i),i)=1;
+    case 4
+      s(1:location(i),i)=-1;
+    otherwise
+      ;
   end
 end
 
