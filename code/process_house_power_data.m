@@ -1,10 +1,10 @@
 clear
 
-dataname = 'ten_weeks'
+dataname = 'twenty_weeks'
 
 load(['../data/raw/' dataname '.txt']);
 
-data_raw = ten_weeks(:,3);
+data_raw = twenty_weeks(:,3);
 
 d_minute_size=length(data_raw);
 
